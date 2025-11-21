@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battle Game</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0c0f25, #1f275a);
+            height: 100vh;
+            color: white;
+            overflow-x: hidden;
+            background-size: 200% 200%;
+            animation: bgMove 10s ease-in-out infinite;
+        }
+
+        @keyframes bgMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 40px;
+            letter-spacing: 2px;
+            color: #4adfff;
+            animation: glow 2s infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 5px #4adfff; }
+            to   { text-shadow: 0 0 20px #4adfff; }
+        }
+
+        .arena {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 50px;
+            gap: 30px;
+            padding: 0 40px;
+        }
+
+        .card {
+            width: 40%;
+            padding: 25px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 20px;
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.15);
+            box-shadow: 0 0 25px rgba(0,255,255,0.25);
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.7s ease-out;
+        }
+
+        .card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 40px rgba(0,255,255,0.4);
+        }
+
+        .card.player2 {
+            animation-delay: 0.15s;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .energy-wrapper {
+            margin-top: 10px;
+        }
+
+        .energy-label {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+
+        .energy-bar {
+            height: 22px;
+            width: 100%;
+            background: rgba(255,255,255,0.15);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .energy-fill {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(90deg, #00fdb5, #00bfff);
+            border-radius: 20px;
+            transition: width 0.4s ease, transform 0.2s ease;
+            box-shadow: 0 0 20px #00e7c9;
+        }
+
+        .energy-fill.heal {
+            animation: pulse 0.3s ease-out;
+        }
+
+        .energy-fill.hit {
+            animation: flashRed 0.3s ease-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scaleX(1); }
+            50% { transform: scaleX(1.05); }
+            100% { transform: scaleX(1); }
+        }
+
+        @keyframes flashRed {
+            0% { filter: hue-rotate(0deg); }
+            50% { filter: hue-rotate(-80deg) brightness(1.4); }
+            100% { filter: hue-rotate(0deg); }
+        }
+
+        button {
+            padding: 12px 22px;
+            margin: 12px 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            color: #fff;
+            transition: 0.25s;
+        }
+
+        .btn-eat {
+            background: #00c853;
+        }
+
+        .btn-eat:hover { background: #00e676; transform: scale(1.07); }
+
+        .btn-attack {
+            background: #d50000;
+        }
+
+        .btn-attack:hover { background: #ff1744; transform: scale(1.07); }
+
+        .card-hit {
+            animation: shake 0.35s ease-out;
+        }
+
+        .card-heal {
+            animation: gentleUp 0.35s ease-out;
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            20% { transform: translateX(-6px); }
+            40% { transform: translateX(6px); }
+            60% { transform: translateX(-4px); }
+            80% { transform: translateX(4px); }
+            100% { transform: translateX(0); }
+        }
+
+        @keyframes gentleUp {
+            0% { transform: translateY(0); }
+            40% { transform: translateY(-6px); }
+            100% { transform: translateY(0); }
+        }
+
+        /* Log */
+        #log {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 20px;
+            opacity: 0.9;
+            transition: 0.3s;
+        }
+
+        /* Animation */
+        .log-animate {
+            transform: scale(1.12);
+            color: #4adfff;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>⚔ BATTLE ARENA ⚔</h1>
+
+    <div class="arena">
+
+        <div class="card">
+            <h2>Pemain 1: <span id="nama1"></span></h2>
+            <h3>Energi: <span id="energi1"></span></h3>
+
+            <div class="energy-wrapper">
+                <div class="energy-bar">
+                    <div id="bar1" class="energy-fill"></div>
+                </div>
+            </div>
+
+            <button class="btn-eat" onclick="p1Makan()">🍗 Makan</button>
+            <button class="btn-attack" onclick="p1Serang()">⚔ Diserang</button>
+        </div>
+
+        <div class="card player2">
+            <h2>Pemain 2: <span id="nama2"></span></h2>
+            <h3>Energi: <span id="energi2"></span></h3>
+
+            <div class="energy-wrapper">
+                <div class="energy-bar">
+                    <div id="bar2" class="energy-fill"></div>
+                </div>
+            </div>
+
+            <button class="btn-eat" onclick="p2Makan()">🍗 Makan</button>
+            <button class="btn-attack" onclick="p2Serang()">⚔ Diserang</button>
+        </div>
+
+    </div>
+
+    <h2 id="log">Selamat datang di arena!</h2>
+
+    <script src="game.js"></script>
+</body>
+</html>
