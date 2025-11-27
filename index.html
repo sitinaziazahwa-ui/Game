@@ -187,6 +187,131 @@
             transform: scale(1.12);
             color: #4adfff;
         }
+
+        /* Inventori */
+        .inventori-container {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .inventori-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .inventori-group h4 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            color: #4adfff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .item-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .item-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .item-list::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+        }
+
+        .item-list::-webkit-scrollbar-thumb {
+            background: rgba(74, 223, 255, 0.5);
+            border-radius: 10px;
+        }
+
+        .item-card {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.2s;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .item-card:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateX(3px);
+        }
+
+        .item-emoji {
+            font-size: 20px;
+        }
+
+        .item-name {
+            flex: 1;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .item-stat {
+            font-size: 12px;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 12px;
+            background: rgba(74, 223, 255, 0.2);
+        }
+
+        .item-card.senjata .item-stat {
+            color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.2);
+        }
+
+        .item-card.makanan .item-stat {
+            color: #51cf66;
+            background: rgba(81, 207, 102, 0.2);
+        }
+
+        .btn-use {
+            padding: 6px 12px;
+            font-size: 11px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .btn-use:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+        }
+
+        .empty-inventori {
+            text-align: center;
+            font-size: 12px;
+            opacity: 0.5;
+            padding: 10px;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
@@ -195,7 +320,7 @@
 
     <div class="arena">
 
-        <div class="card">
+        <div class="card" id="card1">
             <h2>Pemain 1: <span id="nama1"></span></h2>
             <h3>Energi: <span id="energi1"></span></h3>
 
@@ -207,9 +332,11 @@
 
             <button class="btn-eat" onclick="p1Makan()">🍗 Makan</button>
             <button class="btn-attack" onclick="p1Serang()">⚔ Diserang</button>
+
+            <div id="inventori1" class="inventori-container"></div>
         </div>
 
-        <div class="card player2">
+        <div class="card player2" id="card2">
             <h2>Pemain 2: <span id="nama2"></span></h2>
             <h3>Energi: <span id="energi2"></span></h3>
 
@@ -221,6 +348,8 @@
 
             <button class="btn-eat" onclick="p2Makan()">🍗 Makan</button>
             <button class="btn-attack" onclick="p2Serang()">⚔ Diserang</button>
+
+            <div id="inventori2" class="inventori-container"></div>
         </div>
 
     </div>
